@@ -24,5 +24,4 @@ func init() {
 	DB.AutoMigrate(&ContaModel{}, &Operacao{})
 
 	fmt.Print("Migrations executadas\n")
-
 }

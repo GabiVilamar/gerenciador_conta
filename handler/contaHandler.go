@@ -31,7 +31,6 @@ func (ch *contaHandler) Create(c echo.Context) error {
 		log.Fatal("Não foi possível criar esse registro.", err)
 		return c.String(http.StatusBadRequest, "bad request")
 	}
-
 	return c.NoContent(http.StatusNoContent)
 
 }
@@ -49,17 +48,14 @@ func (ch *contaHandler) GetByID(c echo.Context) error {
 
 		return c.JSON(http.StatusNotFound, data)
 	}
-
 	response, err := ch.rc.Get(formattedID)
 
 	if err != nil {
 		data := map[string]interface{}{
 			"message": err.Error(),
 		}
-
 		return c.JSON(http.StatusNotFound, data)
 	}
-
 	return c.JSON(http.StatusOK, response)
 }
 
@@ -70,9 +66,7 @@ func (ch *contaHandler) GetAll(c echo.Context) error {
 		log.Fatal("Erro ao buscar contas", err)
 		return c.JSON(http.StatusNotFound, err)
 	}
-
 	return c.JSON(http.StatusOK, contas)
-
 }
 
 func (ch *contaHandler) Remove(c echo.Context) error {
@@ -83,7 +77,6 @@ func (ch *contaHandler) Remove(c echo.Context) error {
 		data := map[string]interface{}{
 			"message": err.Error(),
 		}
-
 		return c.JSON(http.StatusInternalServerError, data)
 	}
 
@@ -102,7 +95,6 @@ func (ch *contaHandler) Remove(c echo.Context) error {
 		data := map[string]interface{}{
 			"message": err.Error(),
 		}
-
 		return c.JSON(http.StatusInternalServerError, data)
 	}
 
@@ -110,7 +102,6 @@ func (ch *contaHandler) Remove(c echo.Context) error {
 		"message": "A conta foi removida com sucesso!",
 	}
 	return c.JSON(http.StatusOK, response)
-
 }
 
 func (ch *contaHandler) Update(c echo.Context) error {
@@ -122,7 +113,6 @@ func (ch *contaHandler) Update(c echo.Context) error {
 		data := map[string]interface{}{
 			"message": err.Error(),
 		}
-
 		return c.JSON(http.StatusInternalServerError, data)
 	}
 
@@ -132,9 +122,7 @@ func (ch *contaHandler) Update(c echo.Context) error {
 		data := map[string]interface{}{
 			"message": err.Error(),
 		}
-
 		return c.JSON(http.StatusNotFound, data)
-
 	}
 
 	err = c.Bind(&conta)
@@ -150,12 +138,10 @@ func (ch *contaHandler) Update(c echo.Context) error {
 		log.Fatal("Não foi possível atualizar esse registro.", err)
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
 	return c.NoContent(http.StatusNoContent)
 }
 
 func (ch *contaHandler) Transfer(c echo.Context) error {
-
 	id := c.Param("id")
 	contaSourceID, err := strconv.Atoi(id)
 
@@ -163,7 +149,6 @@ func (ch *contaHandler) Transfer(c echo.Context) error {
 		data := map[string]interface{}{
 			"message": err.Error(),
 		}
-
 		return c.JSON(http.StatusInternalServerError, data)
 	}
 
@@ -175,7 +160,6 @@ func (ch *contaHandler) Transfer(c echo.Context) error {
 			"message": err.Error(),
 		}
 		return c.JSON(http.StatusBadRequest, data)
-
 	}
 
 	contaSource, err := ch.rc.Get(int(contaSourceID))
@@ -189,10 +173,9 @@ func (ch *contaHandler) Transfer(c echo.Context) error {
 	log.Print("Conta source", contaSource)
 
 	// Início da operacao de transferência
-
 	switch payload.Type {
-	case 0:
 
+	case 0:
 		extract, err := ch.ts.CreateTranfer(c, payload.ContaTarget, contaSource, payload.Value)
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, err)
@@ -213,7 +196,6 @@ func (ch *contaHandler) Transfer(c echo.Context) error {
 		}
 		return c.JSON(http.StatusOK, extract)
 	}
-
 	return c.JSON(http.StatusBadRequest, "Operação não permitida!")
 }
 
@@ -224,7 +206,5 @@ func (ch *contaHandler) GetAllTransaction(c echo.Context) error {
 		log.Fatal("Erro ao buscar transações", err)
 		return c.JSON(http.StatusNotFound, err)
 	}
-
 	return c.JSON(http.StatusOK, transactions)
-
 }

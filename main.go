@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gerenciador_conta/handler"
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,7 +20,6 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
-	// g := e.Group("meu_banco")
 	e.GET("/", hello)
 	e.GET("/contas", handler.Conta.GetAll)
 	e.GET("/contas/:id", handler.Conta.GetByID)
@@ -28,14 +28,14 @@ func main() {
 	e.DELETE("/contas/:id", handler.Conta.Remove)
 	e.POST("/contas/:id/transaction", handler.Conta.Transfer)
 	e.GET("/contas/transactions", handler.Conta.GetAllTransaction)
-	// e.GET("/healthcheck", handler)
+	e.GET("/healthcheck", hello)
 
 	// /contas?id=<contasID>
 
 	// Start server
 	port := 1350
 	addr := fmt.Sprintf(":%d", port)
-	// log.Info(fmt.Sprintf("Rodando na porta %d", port))
+	log.Print(fmt.Sprintf("Rodando na porta %d", port))
 	e.Logger.Fatal(e.Start(addr))
 }
 
@@ -44,8 +44,8 @@ func hello(c echo.Context) error {
 	return c.String(http.StatusOK, "Hello, World!")
 }
 
-func saldo(c echo.Context) error {
-	return c.String(http.StatusOK, "Opaa")
+func healthcheck(c echo.Context) error {
+	return c.String(http.StatusOK, "OK")
 }
 
 // **Bug pra corrigir**

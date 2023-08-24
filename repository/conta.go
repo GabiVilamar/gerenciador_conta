@@ -47,6 +47,5 @@ func (c *conta) Save(ctx echo.Context, conta ContaModel) error {
 func (c *conta) Remove(id int) error {
 
 	err := c.db.Delete(&ContaModel{}, id).Error
-
 	return err
 }

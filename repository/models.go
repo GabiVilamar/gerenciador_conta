@@ -24,15 +24,8 @@ type Operacao struct {
 	Value         int
 }
 
-const (
-	Addition = iota
-	Autumn
-	Winter
-	Spring
-)
-
 // 0 transferencia
 // 1 depósito
 // 2 saque
 
-// ID        uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`
+//uuid.UUID `gorm:"type:uuid;default:uuid_generate_v4();primary_key"`

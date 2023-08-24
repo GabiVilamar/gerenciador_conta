@@ -12,9 +12,6 @@ type TransactionService interface {
 	CreateTranfer(c echo.Context, targetAccount int, sourceAccount *repository.ContaModel, value int) (repository.Operacao, error)
 	CreateDeposit(c echo.Context, targetAccount int, value int) (repository.Operacao, error)
 	CreateWithdrawal(c echo.Context, targetAccount int, value int) (repository.Operacao, error)
-	// validTransaction(sourceAccount *repository.ContaModel, valueTransaction int) error
-	// updateSourceBalance(c echo.Context, sourceAccount *repository.ContaModel, valueTransaction int) error
-	// updateTargetBalance(c echo.Context, targetAccount *repository.ContaModel, valueTransaction int) error
 }
 
 type transactionService struct {
@@ -22,16 +19,10 @@ type transactionService struct {
 	ro repository.Operation
 }
 
-// type status struct {
-// 	valid string
-// 	invalid string
-// }
-
 func (ts *transactionService) validTransaction(sourceAccount *repository.ContaModel, valueTransaction int) error {
 	if sourceAccount.Saldo < valueTransaction {
 		return errors.New("saldo insuficiente")
 	}
-
 	return nil
 }
 
@@ -54,7 +45,6 @@ func (ts *transactionService) updateSourceBalance(c echo.Context, sourceAccount 
 
 func (ts *transactionService) updateTargetBalance(c echo.Context, targetAccount *repository.ContaModel, valueTransaction int) error {
 	targetAccount.Saldo = targetAccount.Saldo + valueTransaction
-	// targetAccount.Saldo = balanceTarget
 
 	err := ts.rc.Save(c, *targetAccount)
 
@@ -127,8 +117,7 @@ func (ts *transactionService) CreateWithdrawal(c echo.Context, targetAccount int
 	}
 
 	operacao := repository.Operacao{
-		Type: 2,
-		// ContaTargetID: &contaTarget.ID,
+		Type:        2,
 		ContaTarget: contaTarget,
 		Value:       value,
 	}
@@ -171,20 +160,6 @@ func (ts *transactionService) CreateTranfer(c echo.Context, targetAccount int, s
 		return repository.Operacao{}, errors.New("Erro ao atualizar saldo no banco!")
 	}
 
-	// soma := func(saldo int, value int) int {
-	// 	return saldo + value
-	// }(contaTarget.Saldo, value)
-
-	// contaTarget.Saldo = soma
-	// err = ts.rc.Save(c, *contaTarget)
-
-	// if err != nil {
-	// 	log.Fatal("Não foi possível atualizar o saldo.", err)
-	// 	tx.Rollback()
-
-	// 	return repository.Operacao{}, errors.New("Erro ao salvar operação!")
-	// }
-
 	operacao := repository.Operacao{
 		Type:        0,
 		ContaSource: sourceAccount,
@@ -202,8 +177,7 @@ func (ts *transactionService) CreateTranfer(c echo.Context, targetAccount int, s
 
 		return repository.Operacao{}, errors.New("Erro ao salvar operação!")
 	}
-	tx.Commit()
-	// log.Printf("Conta target %d", soma)
 
+	tx.Commit()
 	return operacao, err
 }
